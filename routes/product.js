@@ -47,6 +47,14 @@ router.get("/:id", async (req, res, next) => {
   res.send(product);
 });
 
+router.get('/', (req, res, next) => {
+  const searchField = req.query.name;
+  Product.find({title: {$regex: searchField, $options: '$i'}})
+    .then(data =>{
+      res.send(data);
+    });
+});
+
 function patchValidate(product) {
   const schema = Joi.object({
     title: Joi.string().trim().min(1),
