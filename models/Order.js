@@ -18,12 +18,10 @@ const orderSchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
-  owner: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-    },
-  ],
+  owner: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
 });
 
 const Order = mongoose.model("Order", orderSchema);
