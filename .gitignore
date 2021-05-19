@@ -1,7 +1,3 @@
 # dependencies
 /node_modules
-<<<<<<< HEAD
 /config.env
-=======
-config.env
->>>>>>> new-feature

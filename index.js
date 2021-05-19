@@ -32,32 +32,19 @@ mongoose
   })
   .then(() => console.log("DB connection is successful"));
 
-app.use(express.json());
-app.use(cors());
-
-app.get("/", (req, res) => {
-  res.send("hello");
-});
-app.use("/api/products", products);
-app.use(error);
-
 app.listen(port, () => {
   console.log(`app is listening on port ${port}`);
 });
 
-app.use("/api/v1/users", userRouter);
-
+app.use(express.json());
+app.use(cors());
+app.use("/api/products", products);
+app.use("/api/users", userRouter);
 app.all("*", (req, res, next) => {
-  // res.status(400).json({
-  //   status: "fail",
-  //   data: {
-  //     message: "there is no page",
-  //   },
-  // });
-
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 app.use(globalErrorHandler);
+
 // const newProduct = new Product({
 //   title:"p1",
 //   price:50,
