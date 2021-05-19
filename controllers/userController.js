@@ -29,3 +29,8 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
   createSendToken(newUser, 201, res);
 });
+
+// exports.login = catchAsync(async (req, res, next) => {
+//   // 1)check email and pass exist
+//   if (!req.password || !req.email) next();
+// });

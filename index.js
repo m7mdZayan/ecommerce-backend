@@ -4,6 +4,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const Product = require("./models/Product");
 const userRouter = require("./routes/user");
+const AppError = require("./utils/appError");
+const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 const port = process.env.port || 3000;
@@ -40,15 +42,16 @@ app.listen(port, () => {
 app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {
-  res.status(400).json({
-    status: "fail",
-    data: {
-      message: "there is no page",
-    },
-  });
-  // next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-});
+  // res.status(400).json({
+  //   status: "fail",
+  //   data: {
+  //     message: "there is no page",
+  //   },
+  // });
 
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+app.use(globalErrorHandler);
 // const newProduct = new Product({
 //   title:"p1",
 //   price:50,
