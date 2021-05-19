@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema({
       ref: "Order",
     },
   ],
+  passwordChangedAt: Date,
 });
 
 // userSchema.pre("save", async function (next) {
