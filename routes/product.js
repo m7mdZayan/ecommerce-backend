@@ -3,8 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 const Product = require("../models/Product");
+const userController = require("../controllers/userController");
 
-router.get("/", async (req, res, next) => {
+router.get("/", userController.protect, async (req, res, next) => {
   const products = await Product.find();
   res.send(products);
 });
@@ -21,7 +22,7 @@ router.patch("/:id", async (req, res, next) => {
   });
 
   if (!product) return res.status(404).send("Product not found");
-  
+
   res.send(product);
 });
 

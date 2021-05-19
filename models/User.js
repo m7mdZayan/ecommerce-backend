@@ -81,20 +81,17 @@ userSchema.methods.correctPassword = async function (
 // ) {
 //   return await bcrypt.compare(candidatePassword, userPassword);
 // };
-
-// userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
-//   if (this.passwordChangedAt) {
-//     const changedTimestamp = parseInt(
-//       this.passwordChangedAt.getTime() / 1000,
-//       10
-//     );
-
-//     return JWTTimestamp < changedTimestamp;
-//   }
-
-//   // False means NOT changed
-//   return false;
-// };
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return changedTimestamp > JWTTimestamp;
+  }
+  //false means not changed
+  return false;
+};
 
 // userSchema.methods.createPasswordResetToken = function() {
 //   const resetToken = crypto.randomBytes(32).toString('hex');

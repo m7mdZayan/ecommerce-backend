@@ -3,9 +3,10 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const { promisify } = require("util");
 
 const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRETE, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -42,4 +43,44 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorrect email or password", 401));
 
   createSendToken(user, 200, res);
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+  // console.log("req.headers.authorization = ", req.headers.authorization);
+  // console.log("req.cookies = ", req.cookies);
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+
+  if (!token) {
+    return next(
+      new AppError("you are not logged in, please log in to get access", 401)
+    );
+  }
+
+  const decode = jwt.verify(token, process.env.JWT_SECRET);
+  console.log("decode = ", decode);
+  const currentUser = await User.findById(decode.id);
+  if (!currentUser) {
+    return next(
+      new AppError("the user belonging to this token no longer exist", 401)
+    );
+  }
+
+  if (currentUser.changedPasswordAfter(decode.iat)) {
+    return next(
+      new AppError("user recently changed password please log in again", 401)
+    );
+  }
+
+  // GRANT ACCESS TO PROTECTED ROUTE
+  req.user = currentUser;
+  res.locals.user = currentUser;
+  next();
 });
