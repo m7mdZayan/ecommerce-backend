@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const Product = require("./models/Product");
+const userRouter = require("./routes/user");
 
 const app = express();
 const port = process.env.port || 3000;
@@ -34,6 +35,18 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
   console.log(`app is listening on port ${port}`);
+});
+
+app.use("/api/v1/users", userRouter);
+
+app.all("*", (req, res, next) => {
+  res.status(400).json({
+    status: "fail",
+    data: {
+      message: "there is no page",
+    },
+  });
+  // next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 // const newProduct = new Product({
