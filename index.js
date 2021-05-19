@@ -2,10 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-require('express-async-errors');
+require("express-async-errors");
 
-const products = require('./routes/product');
-const error = require('./middleware/error');
+const products = require("./routes/product");
+const error = require("./middleware/error");
+// const Product = require("./models/Product");
+const userRouter = require("./routes/user");
+const AppError = require("./utils/appError");
+const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 const port = process.env.port || 3000;
@@ -34,9 +38,35 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("hello");
 });
-app.use('/api/products', products);
+app.use("/api/products", products);
 app.use(error);
 
 app.listen(port, () => {
   console.log(`app is listening on port ${port}`);
 });
+
+app.use("/api/v1/users", userRouter);
+
+app.all("*", (req, res, next) => {
+  // res.status(400).json({
+  //   status: "fail",
+  //   data: {
+  //     message: "there is no page",
+  //   },
+  // });
+
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+app.use(globalErrorHandler);
+// const newProduct = new Product({
+//   title:"p1",
+//   price:50,
+//   details:";ld;elfpef[ef0",
+//   amount:10
+// });
+
+// newProduct.save().then(doc=>{
+//   console.log(doc);
+// }).catch(err=>{
+//   console.log(err);
+// })
