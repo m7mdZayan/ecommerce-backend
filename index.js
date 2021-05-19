@@ -39,7 +39,10 @@ app.listen(port, () => {
 app.use(express.json());
 app.use(cors());
 app.use("/api/products", products);
+// app.use("/api/users", products);
+require('./models/User')
 app.use("/api/users", userRouter);
+app.use(require('./routes/user'))
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
