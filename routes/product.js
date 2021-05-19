@@ -37,6 +37,15 @@ router.delete("/:id", async (req, res, next) => {
   res.send(product);
 });
 
+router.get('/search', async (req, res, next) => {
+  const searchField = req.query.title;
+  
+  await Product.find({title: {$regex: searchField, $options: '$i'}})
+    .then(data =>{
+      res.send(data);
+    });
+});
+
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
 
@@ -47,13 +56,6 @@ router.get("/:id", async (req, res, next) => {
   res.send(product);
 });
 
-router.get('/', (req, res, next) => {
-  const searchField = req.query.name;
-  Product.find({title: {$regex: searchField, $options: '$i'}})
-    .then(data =>{
-      res.send(data);
-    });
-});
 
 function patchValidate(product) {
   const schema = Joi.object({

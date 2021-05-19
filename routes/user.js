@@ -14,7 +14,7 @@ router.post("/login", userController.login);
 
 
 
-router.get('/user/:id',(req,res)=>{
+router.get('/:id',(req,res)=>{
     User.findOne({_id:req.params.id})
     .select("-password")
     .populate("orders")
@@ -47,7 +47,7 @@ router.get('/order/:orderid',(req,res)=>{
     })
 })
 
-router.patch("/user/:Id", (req, res) => {
+router.patch("/:Id", (req, res) => {
     const id = req.params.Id;
     const updateOps = req.body;
     
@@ -58,7 +58,7 @@ router.patch("/user/:Id", (req, res) => {
             message: 'updated successfully',
             request: {
                 type: 'GET',
-                url: 'http://localhost:3000/user/' + id
+                url: 'http://localhost:3000/api/users/' + id
             }
         });
       })
