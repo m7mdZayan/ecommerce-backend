@@ -5,8 +5,8 @@ const Order = require("../models/Order");
 const orderRouter = express.Router();
 
 orderRouter.get("/", async (req, res) => {
-  //   const orders = await Order.find().populate("products");
-  const orders = await Order.find();
+  const orders = await Order.find().populate("products");
+  //   const orders = await Order.find();
   res.send(orders);
 });
 

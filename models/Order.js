@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require("./Product");
 
 const orderSchema = new mongoose.Schema({
   date: {
