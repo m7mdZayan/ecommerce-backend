@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const Product = require("./models/Product");
 
 const app = express();
 const port = process.env.port || 3000;
@@ -34,3 +35,16 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`app is listening on port ${port}`);
 });
+
+// const newProduct = new Product({
+//   title:"p1",
+//   price:50,
+//   details:";ld;elfpef[ef0",
+//   amount:10
+// });
+
+// newProduct.save().then(doc=>{
+//   console.log(doc);
+// }).catch(err=>{
+//   console.log(err);
+// })
