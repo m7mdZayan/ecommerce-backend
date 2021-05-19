@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
   totalPrice: { type: Number, required: [true, "Please enter total price "] },
   state: {
     type: String,
