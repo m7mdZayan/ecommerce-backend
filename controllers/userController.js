@@ -65,7 +65,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   const decode = jwt.verify(token, process.env.JWT_SECRET);
-  console.log("decode = ", decode);
+  // console.log("decode = ", decode);
   const currentUser = await User.findById(decode.id);
   if (!currentUser) {
     return next(
@@ -84,3 +84,14 @@ exports.protect = catchAsync(async (req, res, next) => {
   res.locals.user = currentUser;
   next();
 });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError("you are not allowed to perform this action", 403)
+      );
+    }
+    next();
+  };
+};

@@ -5,10 +5,15 @@ const router = express.Router();
 const Product = require("../models/Product");
 const userController = require("../controllers/userController");
 
-router.get("/", userController.protect, async (req, res, next) => {
-  const products = await Product.find();
-  res.send(products);
-});
+router.get(
+  "/",
+  userController.protect,
+  userController.restrictTo("user"),
+  async (req, res, next) => {
+    const products = await Product.find();
+    res.send(products);
+  }
+);
 
 router.patch("/:id", async (req, res, next) => {
   const { error } = patchValidate(req.body);
