@@ -8,7 +8,7 @@ const userController = require("../controllers/userController");
 router.get(
   "/",
   userController.protect,
-  userController.restrictTo("user"),
+  userController.restrictTo("admin"),
   async (req, res, next) => {
     const products = await Product.find();
     res.send(products);
