@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
+require("./Product");
 
 const orderSchema = new mongoose.Schema({
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
   totalPrice: { type: Number, required: [true, "Please enter total price "] },
   state: {
     type: String,
@@ -14,12 +18,10 @@ const orderSchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
-  owner: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-    },
-  ],
+  owner: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
 });
 
 const Order = mongoose.model("Order", orderSchema);

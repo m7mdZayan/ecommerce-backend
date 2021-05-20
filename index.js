@@ -2,8 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const orderRouter = require("./routes/order");
+require("./models/User");
 require("express-async-errors");
-
 const products = require("./routes/product");
 const error = require("./middleware/error");
 // const Product = require("./models/Product");
@@ -38,6 +39,12 @@ app.listen(port, () => {
 
 app.use(express.json());
 app.use(cors());
+app.use("/api/orders", orderRouter);
+
+// app.get("/", (req, res) => {
+//   res.send("hello");
+// });
+
 app.use("/api/products", products);
 app.use("/api/users", userRouter);
 app.all("*", (req, res, next) => {

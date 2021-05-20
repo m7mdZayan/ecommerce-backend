@@ -43,6 +43,15 @@ router.delete("/:id", async (req, res, next) => {
   res.send(product);
 });
 
+router.get('/search', async (req, res, next) => {
+  const searchField = req.query.title;
+  
+  await Product.find({title: {$regex: searchField, $options: '$i'}})
+    .then(data =>{
+      res.send(data);
+    });
+});
+
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
 
@@ -52,6 +61,25 @@ router.get("/:id", async (req, res, next) => {
 
   res.send(product);
 });
+
+router.post("/create", async (req, res,next) => {
+  const product = new Product({
+    title: req.body.title,
+    photo: req.body.photo,
+    price: req.body.price,
+    details: req.body.details,
+    amount: req.body.amount,
+});
+const newProduct = await product.save();
+if (newProduct) {
+    return res
+        .status(201)
+        .send({ message: 'new product created', data: newProduct });
+}
+return res.status(500).send({ message: ' Error in Creating Product.' });
+
+});
+
 
 function patchValidate(product) {
   const schema = Joi.object({
