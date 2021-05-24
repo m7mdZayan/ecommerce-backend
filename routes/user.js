@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
+router.get("/logout", userController.protect, userController.logout);
 
 router.get("/:id", (req, res) => {
   User.findOne({ _id: req.params.id })

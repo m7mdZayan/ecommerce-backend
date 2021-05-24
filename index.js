@@ -11,8 +11,10 @@ const error = require("./middleware/error");
 const userRouter = require("./routes/user");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
+const cookieParser = require('cookie-parser')
 
 const app = express();
+app.use(cookieParser())
 const port = process.env.port || 3000;
 
 dotenv.config({ path: "./config.env" });
@@ -38,7 +40,14 @@ app.listen(port, () => {
 });
 
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: 'http://127.0.0.1:4200',
+  optionsSuccessStatus: 200,
+  credentials: true
+};
+app.use(cors(corsOptions ));
+
+
 app.use("/api/orders", orderRouter);
 
 // app.get("/", (req, res) => {
