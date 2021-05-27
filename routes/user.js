@@ -14,6 +14,7 @@ router.get("/:id", (req, res) => {
   User.findOne({ _id: req.params.id })
     .select("-password")
     .populate("orders")
+    .populate({path:"orders", populate:"products"})
     .then((user) => {
       Order.findOne({ user: req.params.id }).exec((err, orders) => {
         if (err) {
@@ -29,17 +30,6 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.get("/order/:orderid", (req, res) => {
-  // Post.find().populate('postedBy','name')
-  Order.findOne({ _id: req.params.orderid })
-    .populate("products")
-    .then((order) => {
-      res.json({ order });
-    })
-    .catch((err) => {
-      return res.status(422).json({ error: err });
-    });
-});
 
 router.patch("/:Id", (req, res) => {
   const id = req.params.Id;
