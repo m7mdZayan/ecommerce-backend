@@ -16,8 +16,8 @@ router.get(
 );
 
 router.patch("/:id", async (req, res, next) => {
-  const { error } = patchValidate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // const { error } = patchValidate(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
 
   let id = req.params.id;
 
@@ -80,16 +80,21 @@ router.post("/create", async (req, res, next) => {
   return res.status(500).send({ message: " Error in Creating Product." });
 });
 
-router.get('/get/count',async (req,res)=>{
-    const productCount = await Product.countDocuments((count)=> count)
-    if(!productCount){
-        res.status(500).json({
-            success: false
-        })
+router.get(
+  "/get/count",
+  userController.protect,
+  userController.restrictTo("admin"),
+  async (req, res) => {
+    const productCount = await Product.countDocuments((count) => count);
+    if (!productCount) {
+      res.status(500).json({
+        success: false,
+      });
     }
-    data = [{count: productCount,}]
+    data = [{ count: productCount }];
     res.send(data);
-})
+  }
+);
 
 function patchValidate(product) {
   const schema = Joi.object({
