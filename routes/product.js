@@ -80,6 +80,17 @@ router.post("/create", async (req, res, next) => {
   return res.status(500).send({ message: " Error in Creating Product." });
 });
 
+router.get('/get/count',async (req,res)=>{
+    const productCount = await Product.countDocuments((count)=> count)
+    if(!productCount){
+        res.status(500).json({
+            success: false
+        })
+    }
+    data = [{count: productCount,}]
+    res.send(data);
+})
+
 function patchValidate(product) {
   const schema = Joi.object({
     title: Joi.string().trim().min(1),

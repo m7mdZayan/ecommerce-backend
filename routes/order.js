@@ -72,4 +72,37 @@ orderRouter.delete("/", async (req, res) => {
 //   }
 // })
 
+orderRouter.get('/get/totalsales', async (req, res)=> {
+  const totalSales= await Order.aggregate([
+      { $group: { _id: null , totalsales : { $sum : '$totalPrice'}}}
+  ])
+
+  if(!totalSales) {
+      return res.status(400).send('The order sales cannot be generated')
+  }
+  let data = [
+    {
+      totalsales: totalSales.pop().totalsales
+    }
+  ]
+
+  res.send(data)
+})
+
+orderRouter.get('/get/count', async (req, res) =>{
+  const orderCount = await Order.countDocuments((count) => count)
+
+  if(!orderCount) {
+      res.status(500).json({success: false})
+  } 
+
+  let data  = 
+    [
+      {orderCount: orderCount,
+      message: "all prodcuts in store"}
+    ]
+  
+  res.send(data);
+})
+
 module.exports = orderRouter;
